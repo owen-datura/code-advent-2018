@@ -1,5 +1,8 @@
 package io.datura.java.quizzes.advent2018.day02;
 
+import java.util.Collections;
+import java.util.Map;
+
 public class AdventDay02 {
 	private static int ASCII_NUM_LOWERCASE = 26;
 	private static int ASCII_START_VALUE = 97;
@@ -11,6 +14,14 @@ public class AdventDay02 {
 		System.out.println(printCharCountArray(result));
 	}
 
+	public static Map<Character, Integer> getCharacterMap(String boxCode) {
+		return Collections.emptyMap();
+	}
+
+	public static boolean isEmpty(String input) {
+		return input == null || input.isBlank();
+	}
+	
 	private static int[] countOccurrence(String vals) {
 		int[] counts = new int[ASCII_NUM_LOWERCASE];
 		for (char c : vals.toCharArray()) {
@@ -22,7 +33,7 @@ public class AdventDay02 {
 
 	public static String printCharCountArray(int[] counts) {
 		StringBuilder output = new StringBuilder();
-		
+
 		for (int i = 0; i < ASCII_NUM_LOWERCASE; i++) {
 			char c = (char) (ASCII_START_VALUE + i);
 			output.append(c);
@@ -30,7 +41,7 @@ public class AdventDay02 {
 			output.append(counts[i]);
 			output.append("\n");
 		}
-		
+
 		return output.toString();
 	}
 }
