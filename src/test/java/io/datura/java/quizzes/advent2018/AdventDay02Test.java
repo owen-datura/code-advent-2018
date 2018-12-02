@@ -1,9 +1,12 @@
 package io.datura.java.quizzes.advent2018;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,7 +55,7 @@ public class AdventDay02Test {
 		SimpleImmutableEntry<Boolean, Boolean> checkResult = AdventDay02.hasDubsTrips(counts);
 		assertFalse(checkResult.getKey());
 	}
-	
+
 	@Test
 	public void testTriples() {
 		Map<Character, Integer> counts = new HashMap<>();
@@ -74,5 +77,30 @@ public class AdventDay02Test {
 		counts.put('j', 4);
 		SimpleImmutableEntry<Boolean, Boolean> checkResult = AdventDay02.hasDubsTrips(counts);
 		assertFalse(checkResult.getValue());
+	}
+
+	@Test
+	public void testCount() {
+		String[] boxCodes = { "abcdef", "bababc", "abbcde", "abcccd", "aabcdd", "abcdee", "ababab" };
+
+		Collection<SimpleImmutableEntry<Boolean, Boolean>> results = new ArrayList<>();
+		for (String code : boxCodes) {
+			results.add(AdventDay02.hasDubsTrips(AdventDay02.getCharacterMap(code)));
+		}
+
+		SimpleImmutableEntry<Integer, Integer> counts = AdventDay02.getDubsTripsTotal(results);
+
+		Integer doubles = counts.getKey();
+		assertEquals(Integer.valueOf(4), doubles);
+		Integer triples = counts.getValue();
+		assertEquals(Integer.valueOf(3), triples);
+		
+		/*
+		String output = String.format("Found %d doubles and %d triples.", doubles, triples);
+		System.out.println(output);
+		*/
+		
+		Integer result = doubles * triples;
+		assertEquals(Integer.valueOf(12), result);
 	}
 }

@@ -10,8 +10,6 @@ public class AdventDay02 {
 	private static int ASCII_NUM_LOWERCASE = 26;
 	private static int ASCII_START_VALUE = 97;
 
-	private static String[] boxCodes = { "abcdef", "bababc", "abbcde", "abcccd", "aabcdd", "abcdee", "ababab" };
-
 	public static void main(String[] args) {
 		Map<Character, Integer> map = getCharacterMap("aabbcddeeefz");
 		System.out.println(map);
@@ -74,6 +72,7 @@ public class AdventDay02 {
 		return input == null || input.isBlank();
 	}
 
+	@SuppressWarnings("unused")
 	private static int[] countOccurrence(String vals) {
 		int[] counts = new int[ASCII_NUM_LOWERCASE];
 		for (char c : vals.toCharArray()) {
