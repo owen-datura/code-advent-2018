@@ -1,4 +1,4 @@
-package io.datura.java.quizzes.advent2018.day02;
+package io.datura.java.quizzes.advent2018.day01;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
