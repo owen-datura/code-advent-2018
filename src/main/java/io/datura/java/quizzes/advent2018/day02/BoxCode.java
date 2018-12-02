@@ -1,8 +1,10 @@
 package io.datura.java.quizzes.advent2018.day02;
 
 import java.util.BitSet;
+import java.util.Collections;
+import java.util.List;
 
-public class BoxCode {
+public class BoxCode implements Comparable<BoxCode> {
 	private final String code;
 	private int closestDistance;
 	private BoxCode closestCode;
@@ -15,9 +17,39 @@ public class BoxCode {
 		return code;
 	}
 
-	public static void mapBoxCodes(String[] codes) {
-		for (int i = 0, sz = codes.length; i < sz; i++) {
-			
+	public int getClosestDistance() {
+		return closestDistance;
+	}
+
+	public void setClosestDistance(int closestDistance) {
+		this.closestDistance = closestDistance;
+	}
+
+	public String getClosestMatchingCode() {
+		return this.closestCode.getCode();
+	}
+
+	public void setClosestCode(BoxCode closestCode) {
+		this.closestCode = closestCode;
+	}
+
+	public void evaluate(BoxCode bc) {
+		// evaluate this code against the foreign one
+		int highBits = getNumHighBits(calculateHammingDistanceBitSet(this, bc));
+
+		// assist in doing an early bail-out by checking if there's *any* matching
+		// characters before determining if the existing comparison (if any)
+		// is weaker than the one we just computed
+		if (highBits > 0 && closestDistance < highBits) {
+			this.setClosestDistance(highBits);
+			this.setClosestCode(bc);
+		}
+
+		// our comparison is transitive, so we'll set a value
+		// on the foreign box code if applicable
+		if (bc.getClosestDistance() == 0 || bc.getClosestDistance() < highBits) {
+			bc.setClosestDistance(highBits);
+			bc.setClosestCode(this);
 		}
 	}
 
@@ -62,5 +94,25 @@ public class BoxCode {
 		char[] output = new char[sz];
 		System.arraycopy(ca, 0, output, 0, ca.length);
 		return output;
+	}
+
+	public static BoxCode getClosestMatch(List<BoxCode> codes) {
+		if (codes == null || codes.isEmpty())
+			return null;
+
+		// perform a sort against the collection, placing the
+		// record w/ the closest match at the top
+		Collections.sort(codes, Collections.reverseOrder());
+
+		// then pick the closest match
+		return codes.get(0);
+	}
+
+	@Override
+	public int compareTo(BoxCode o) {
+		Integer d = Integer.valueOf(this.getClosestDistance());
+		Integer d1 = Integer.valueOf(o.getClosestDistance());
+		int compare = d.compareTo(d1);
+		return compare;
 	}
 }
