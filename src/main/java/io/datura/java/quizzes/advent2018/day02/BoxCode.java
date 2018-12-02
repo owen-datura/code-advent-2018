@@ -43,13 +43,13 @@ public class BoxCode implements Comparable<BoxCode> {
 		if (highBits > 0 && closestDistance < highBits) {
 			this.setClosestDistance(highBits);
 			this.setClosestCode(bc);
-		}
-
-		// our comparison is transitive, so we'll set a value
-		// on the foreign box code if applicable
-		if (bc.getClosestDistance() == 0 || bc.getClosestDistance() < highBits) {
-			bc.setClosestDistance(highBits);
-			bc.setClosestCode(this);
+			
+			// our comparison is transitive, so we'll set a value
+			// on the foreign box code if applicable
+			if (bc.getClosestDistance() == 0 || bc.getClosestDistance() < highBits) {
+				bc.setClosestDistance(highBits);
+				bc.setClosestCode(this);
+			}
 		}
 	}
 
