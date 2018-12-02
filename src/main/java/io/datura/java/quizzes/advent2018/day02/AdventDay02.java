@@ -1,18 +1,45 @@
 package io.datura.java.quizzes.advent2018.day02;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.datura.java.quizzes.advent2018.day01.AdventDay01;
 
 public class AdventDay02 {
 	private static int ASCII_NUM_LOWERCASE = 26;
 	private static int ASCII_START_VALUE = 97;
 
 	public static void main(String[] args) {
-		Map<Character, Integer> map = getCharacterMap("aabbcddeeefz");
-		System.out.println(map);
+		try {
+			Collection<String> boxCodes = getDataFromInputFile();
+
+			Collection<SimpleImmutableEntry<Boolean, Boolean>> results = new ArrayList<>();
+			for (String code : boxCodes) {
+				results.add(hasDubsTrips(getCharacterMap(code)));
+			}
+
+			SimpleImmutableEntry<Integer, Integer> counts = getDubsTripsTotal(results);
+			Integer doubles = counts.getKey();
+			Integer triples = counts.getValue();
+			String countsOutput = String.format("Found %d doubles and %d triples.", doubles, triples);
+			System.out.println(countsOutput);
+
+			Integer result = doubles * triples;
+			String totalOutput = String.format("Calculated result of %d.", result);
+			System.out.println(totalOutput);
+		} catch (IOException ioe) {
+			System.err.println("Encountered an I/O error when processing input. Aborting.");
+			System.exit(1);
+		}
 	}
 
 	public static SimpleImmutableEntry<Integer, Integer> getDubsTripsTotal(
@@ -28,8 +55,9 @@ public class AdventDay02 {
 				tripleCount++;
 		}
 
-		// the requirements don't specify what happens if the input has zero of either number
-		
+		// the requirements don't specify what happens if the input has zero of either
+		// number
+
 		return new SimpleImmutableEntry<Integer, Integer>(doubleCount, tripleCount);
 	}
 
@@ -94,5 +122,19 @@ public class AdventDay02 {
 		}
 
 		return output.toString();
+	}
+
+	private static Collection<String> getDataFromInputFile() throws IOException {
+		try {
+			// the input file's stored relative to the class,
+			// so retrieve it w/ the classloader
+			ClassLoader classLoader = AdventDay01.class.getClassLoader();
+			Path p = Paths.get(classLoader.getResource("boxcodes.txt").toURI());
+			// Files.lines stealthily opens (and keeps open) a handle, so
+			// we need to ensure that the stream it produces gets closed
+			return Files.readAllLines(p);
+		} catch (URISyntaxException urie) {
+			throw new IOException("Unable to load input files, check file layout.");
+		}
 	}
 }
