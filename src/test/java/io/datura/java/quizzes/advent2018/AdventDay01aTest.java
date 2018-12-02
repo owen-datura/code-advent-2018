@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import io.datura.java.quizzes.advent2018.day02.AdventDay01a;
+import io.datura.java.quizzes.advent2018.day01.AdventDay01a;
 
 public class AdventDay01aTest {
 	@Test
