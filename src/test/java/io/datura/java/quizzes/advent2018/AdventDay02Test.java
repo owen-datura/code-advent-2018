@@ -13,24 +13,25 @@ import java.util.Map;
 import org.junit.Test;
 
 import io.datura.java.quizzes.advent2018.day02.AdventDay02;
+import io.datura.java.quizzes.advent2018.util.AdventUtils;
 
 public class AdventDay02Test {
 	@Test
 	public void testIsNotEmpty() {
 		String testString = "somecontents here are some spaces hello";
-		assertFalse(AdventDay02.isEmpty(testString));
+		assertFalse(AdventUtils.isEmpty(testString));
 	}
 
 	@Test
 	public void testIsEmpty() {
 		String testString = "";
-		assertTrue(AdventDay02.isEmpty(testString));
+		assertTrue(AdventUtils.isEmpty(testString));
 	}
 
 	@Test
 	public void testNull() {
 		String testString = null;
-		assertTrue(AdventDay02.isEmpty(testString));
+		assertTrue(AdventUtils.isEmpty(testString));
 	}
 
 	@Test
@@ -94,12 +95,12 @@ public class AdventDay02Test {
 		assertEquals(Integer.valueOf(4), doubles);
 		Integer triples = counts.getValue();
 		assertEquals(Integer.valueOf(3), triples);
-		
+
 		/*
-		String output = String.format("Found %d doubles and %d triples.", doubles, triples);
-		System.out.println(output);
-		*/
-		
+		 * String output = String.format("Found %d doubles and %d triples.", doubles,
+		 * triples); System.out.println(output);
+		 */
+
 		Integer result = doubles * triples;
 		assertEquals(Integer.valueOf(12), result);
 	}

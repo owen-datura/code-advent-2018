@@ -15,6 +15,12 @@ public class BoxCode {
 		return code;
 	}
 
+	public static void mapBoxCodes(String[] codes) {
+		for (int i = 0, sz = codes.length; i < sz; i++) {
+			
+		}
+	}
+
 	public static int getNumHighBits(BitSet bs) {
 		int bitsHigh = 0;
 		for (int i = 0, sz = bs.length(); i < sz; i++) {

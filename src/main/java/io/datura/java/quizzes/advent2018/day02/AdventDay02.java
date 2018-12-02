@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.datura.java.quizzes.advent2018.day01.AdventDay01;
+import io.datura.java.quizzes.advent2018.util.AdventUtils;
 
 public class AdventDay02 {
 	private static int ASCII_NUM_LOWERCASE = 26;
@@ -77,7 +78,7 @@ public class AdventDay02 {
 	}
 
 	public static Map<Character, Integer> getCharacterMap(String boxCode) {
-		if (isEmpty(boxCode))
+		if (AdventUtils.isEmpty(boxCode))
 			return Collections.emptyMap();
 
 		Map<Character, Integer> characterMap = new HashMap<>();
@@ -94,10 +95,6 @@ public class AdventDay02 {
 		}
 
 		return characterMap;
-	}
-
-	public static boolean isEmpty(String input) {
-		return input == null || input.isBlank();
 	}
 
 	@SuppressWarnings("unused")
