@@ -8,8 +8,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-
-import io.datura.java.quizzes.advent2018.day01.AdventDay01;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AdventDay03a {
 	private static int FABRIC_LEN = 1000;
@@ -60,11 +60,16 @@ public class AdventDay03a {
 					sheet[rowOffset][colOffset] = claims;
 				} else {
 					// the third cell *does* contain an existing claim record,
-					// so we must have been here before. get the existing array
-					// that's held in the current cell, add the current claim to it
-					// and then set it back on the master sheet
+					// so we must have been here before. this case brings
+					// these claims into conflict, so set that state,
+					// then update the existing cell so that it contains the
+					// existing and newly-evaluated claim within it
+
 					FabricClaim[] updatedClaims = Arrays.copyOf(claims, claims.length + 1);
 					updatedClaims[updatedClaims.length - 1] = claim;
+					for (FabricClaim c : Arrays.asList(updatedClaims))
+						c.setHasConflict();
+
 					sheet[rowOffset][colOffset] = updatedClaims;
 				}
 			}
@@ -82,30 +87,6 @@ public class AdventDay03a {
 		}
 
 		return populatedCells;
-	}
-
-	public static Collection<FabricClaim> getNonConflictingClaims(FabricClaim[][][] sheet) {
-		Collection<FabricClaim> freeClaims = new ArrayList<>();
-		for (int i = 0, rows = sheet.length; i < rows; i++) {
-			for (int j = 0, cols = sheet[i].length; j < cols; j++) {
-				FabricClaim[] vals = sheet[i][j];
-				if (vals != null && vals.length == 1)
-					freeClaims.add(vals[0]);
-			}
-		}
-		return freeClaims;
-	}
-
-	public static int getNumConflictingClaims(FabricClaim[][][] sheet) {
-		int conflictingClaims = 0;
-		for (int i = 0, rows = sheet.length; i < rows; i++) {
-			for (int j = 0, cols = sheet[i].length; j < cols; j++) {
-				FabricClaim[] vals = sheet[i][j];
-				if (vals != null && vals.length > 1)
-					conflictingClaims++;
-			}
-		}
-		return conflictingClaims;
 	}
 
 	public static int getFabricConflicts(FabricClaim[][][] sheet) {
@@ -160,7 +141,7 @@ public class AdventDay03a {
 		try {
 			// the input file's stored relative to the class,
 			// so retrieve it w/ the classloader
-			ClassLoader classLoader = AdventDay01.class.getClassLoader();
+			ClassLoader classLoader = AdventDay03a.class.getClassLoader();
 			Path p = Paths.get(classLoader.getResource("fabric-usage.txt").toURI());
 			// Files.lines stealthily opens (and keeps open) a handle, so
 			// we need to ensure that the stream it produces gets closed
@@ -168,5 +149,22 @@ public class AdventDay03a {
 		} catch (URISyntaxException urie) {
 			throw new IOException("Unable to load input files, check file layout.");
 		}
+	}
+
+	public static Collection<Integer> getNonConflictingClaims(FabricClaim[][][] sheet) {
+		Set<Integer> nonConflictingClaims = new HashSet<>();
+		for (int i = 0, rows = sheet.length; i < rows; i++) {
+			for (int j = 0, cols = sheet[i].length; j < cols; j++) {
+				FabricClaim[] claims = sheet[i][j];
+				if (claims == null)
+					continue;
+
+				for (FabricClaim claim : Arrays.asList(claims)) {
+					if (!claim.hasConflict())
+						nonConflictingClaims.add(claim.getClaimId());
+				}
+			}
+		}
+		return nonConflictingClaims;
 	}
 }

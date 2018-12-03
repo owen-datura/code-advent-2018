@@ -11,6 +11,7 @@ public class FabricClaim {
 	private int topMargin;
 	private int width;
 	private int height;
+	private boolean hasConflict = false;
 
 	// the claims are all in a standard format, so we'll leverage that to parse it into a proper object
 	public static final String INPUT_PATTERN = "[#](\\d+)\\s[@]\\s(\\d+)[,](\\d+)[:]\\s(\\d+)[x](\\d+)";
@@ -57,6 +58,15 @@ public class FabricClaim {
 
 	public void setHeight(int height) {
 		this.height = height;
+	}
+
+	public boolean hasConflict() {
+		return hasConflict;
+	}
+
+	public void setHasConflict() {
+		// deliberately don't want to allow this state to be unset
+		this.hasConflict = true;
 	}
 
 	public static FabricClaim parseClaim(String claimText) {
