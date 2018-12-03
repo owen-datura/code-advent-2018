@@ -12,6 +12,7 @@ public class FabricClaim {
 	private int width;
 	private int height;
 
+	// the claims are all in a standard format, so we'll leverage that to parse it into a proper object
 	public static final String INPUT_PATTERN = "[#](\\d+)\\s[@]\\s(\\d+)[,](\\d+)[:]\\s(\\d+)[x](\\d+)";
 	public static final Pattern inputPattern = Pattern.compile(INPUT_PATTERN);
 
