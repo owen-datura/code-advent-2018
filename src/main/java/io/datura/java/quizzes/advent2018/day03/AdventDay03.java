@@ -14,11 +14,11 @@ public class AdventDay03 {
 	public static void markClaim(char[][] sheet, FabricClaim claim) {
 		// the margin defines our starting point
 		// we'll want to track the *initial* column
-		int initialCol = claim.getLeftMargin();
+		final int initialCol = claim.getLeftMargin();
 		// then use the initial value to determine the maximum
-		int maxCol = initialCol + claim.getWidth();
+		final int maxCol = initialCol + claim.getWidth();
 		// similarly, we need to determine the max row so we can iterate
-		int maxRow = claim.getTopMargin() + claim.getHeight();
+		final int maxRow = claim.getTopMargin() + claim.getHeight();
 		
 		for (int rowOffset = claim.getTopMargin(); rowOffset < maxRow; rowOffset++) {
 			for (int colOffset = initialCol; colOffset < maxCol; colOffset++) {
