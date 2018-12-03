@@ -28,25 +28,26 @@ public class AdventDay03Test {
 
 		FabricClaim claim = FabricClaim.parseClaim("#123 @ 3,2: 5x4");
 		AdventDay03.markClaim(sheet, claim);
-		//AdventDay03.printFabricLayout(sheet);
+		// AdventDay03.printFabricLayout(sheet);
 		int populated = AdventDay03.getFabricUtilization(sheet);
 		assertEquals(20, populated);
 	}
-	
+
 	@Test
 	public void testOverlapExample() {
 		int width = 8;
 		int height = 8;
 		char[][] sheet = new char[height][width];
-		
+
 		FabricClaim claim = FabricClaim.parseClaim("#1 @ 1,3: 4x4");
 		FabricClaim claim2 = FabricClaim.parseClaim("#2 @ 3,1: 4x4");
 		FabricClaim claim3 = FabricClaim.parseClaim("#3 @ 5,5: 2x2");
-		
+
 		AdventDay03.markClaim(sheet, claim);
 		AdventDay03.markClaim(sheet, claim2);
 		AdventDay03.markClaim(sheet, claim3);
-		
-		AdventDay03.printFabricLayout(sheet);
+
+		int conflicts = AdventDay03.getFabricConflicts(sheet);
+		assertEquals(4, conflicts);
 	}
 }

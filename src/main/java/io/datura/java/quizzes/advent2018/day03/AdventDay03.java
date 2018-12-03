@@ -4,6 +4,9 @@ public class AdventDay03 {
 	// private static int FABRIC_LEN = 1000;
 	private static int FABRIC_LEN = 10;
 
+	public static final char USAGE_NORMAL = 'o';
+	public static final char USAGE_CONFLICT = 'X';
+	
 	public static void main(String[] args) {
 		// it's specifically stated to be a square, so
 		// the l & w are equal
@@ -22,7 +25,11 @@ public class AdventDay03 {
 		
 		for (int rowOffset = claim.getTopMargin(); rowOffset < maxRow; rowOffset++) {
 			for (int colOffset = initialCol; colOffset < maxCol; colOffset++) {
-				sheet[rowOffset][colOffset] = 'o';
+				char curVal = sheet[rowOffset][colOffset];
+				if( curVal == 0 )
+					sheet[rowOffset][colOffset] = USAGE_NORMAL;
+				else
+					sheet[rowOffset][colOffset] = USAGE_CONFLICT;
 			}
 		}
 	}
@@ -32,7 +39,7 @@ public class AdventDay03 {
 		for (int i = 0, rows = sheet.length; i < rows; i++) {
 			for (int j = 0, cols = sheet[i].length; j < cols; j++) {
 				char val = sheet[i][j];
-				if( val != 0 )
+				if( val != 0)
 					populatedCells++;
 			}
 		}
@@ -40,6 +47,19 @@ public class AdventDay03 {
 		return populatedCells;
 	}
 
+	public static int getFabricConflicts(char[][] sheet) {
+		int populatedCells = 0;
+		for (int i = 0, rows = sheet.length; i < rows; i++) {
+			for (int j = 0, cols = sheet[i].length; j < cols; j++) {
+				char val = sheet[i][j];
+				if( val == USAGE_CONFLICT )
+					populatedCells++;
+			}
+		}
+		
+		return populatedCells;
+	}
+	
 	public static void printFabricLayout(char[][] rows) {
 		StringBuilder so = new StringBuilder();
 
