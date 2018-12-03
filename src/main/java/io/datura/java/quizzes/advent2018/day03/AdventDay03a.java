@@ -30,9 +30,8 @@ public class AdventDay03a {
 				markClaim(sheet, claim);
 			}
 
-			int conflicts = 0;
-			String output = String.format("Calculation of fabric claims complete. There were %d conflicts.", conflicts);
-			System.out.println(output);
+			Collection<Integer> noConflictClaims = getNonConflictingClaims(sheet);
+			System.out.println(noConflictClaims);
 		} catch (IOException ioe) {
 			System.err.println("Encountered an I/O exception when processing input. Please check configuration.");
 			System.exit(1);
