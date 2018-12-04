@@ -5,7 +5,7 @@ import java.util.Comparator;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-public class GuardIntelComparator implements Comparator<Pair<LocalDateTime, String>>{
+public class GuardIntelDateComparator implements Comparator<Pair<LocalDateTime, String>>{
 
 	@Override
 	public int compare(Pair<LocalDateTime, String> o1, Pair<LocalDateTime, String> o2) {

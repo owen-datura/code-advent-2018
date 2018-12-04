@@ -24,7 +24,7 @@ public class SortIntelFile {
 		try {
 			List<Pair<LocalDateTime, String>> intelList = readAndConvertIntel();
 
-			Collections.sort(intelList, new GuardIntelComparator());
+			Collections.sort(intelList, new GuardIntelDateComparator());
 
 			Path sortedFileLoc = writeGuardIntel(intelList);
 

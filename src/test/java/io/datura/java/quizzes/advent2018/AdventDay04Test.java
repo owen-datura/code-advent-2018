@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
-import io.datura.java.quizzes.advent2018.day04.GuardIntelComparator;
+import io.datura.java.quizzes.advent2018.day04.GuardIntelDateComparator;
 import io.datura.java.quizzes.advent2018.day04.SortIntelFile;
 
 public class AdventDay04Test {
@@ -36,7 +36,7 @@ public class AdventDay04Test {
 		List<Pair<LocalDateTime, String>> events = Arrays.asList(testStrings).stream().map(SortIntelFile::parseDate)
 				.collect(Collectors.toList());
 
-		Collections.sort(events, new GuardIntelComparator());
+		Collections.sort(events, new GuardIntelDateComparator());
 
 		LocalDateTime dateTime = events.get(0).getLeft();
 		assertEquals(1518, dateTime.getYear());
