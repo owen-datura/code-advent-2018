@@ -1,17 +1,23 @@
 package io.datura.java.quizzes.advent2018.day04;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 public class GuardActivity {
 	private final int guardId;
 	private int timesOnDuty = 1;
-	private long timeAsleep = 0l;
+	private Map<LocalDate, BitSet> sleepTimes = new LinkedHashMap<>();
+
+	private static int INTERVAL_BITSET_LENGTH = 60;
 
 	public GuardActivity(int guardId) {
 		this.guardId = guardId;
-	}
-
-	public GuardActivity(int guardId, long timeAsleep) {
-		this.guardId = guardId;
-		this.timeAsleep = timeAsleep;
 	}
 
 	public int getGuardId() {
@@ -26,11 +32,85 @@ public class GuardActivity {
 		return timesOnDuty;
 	}
 
-	public long getTimeAsleep() {
-		return timeAsleep;
+	public int addSleepTime(LocalDateTime wentToSleep, LocalDateTime awoke) {
+		// we'll store the times based on when they awoke, not when they fell asleep
+		LocalDate wakeTime = LocalDate.from(awoke);
+		BitSet sleepBits = createSleepTimeBitSet(wentToSleep, awoke);
+		if (sleepTimes.containsKey(wakeTime))
+			sleepTimes.get(wakeTime).or(sleepBits);
+		else
+			sleepTimes.put(wakeTime, sleepBits);
+
+		return sleepTimes.get(wakeTime).cardinality();
 	}
 
-	public void addToTimeAsleep(long len) {
-		timeAsleep += len;
+	public int getSumTimeAsleep() {
+		int sum = 0;
+		for (BitSet t : sleepTimes.values()) {
+			sum += t.cardinality();
+		}
+		return sum;
+	}
+
+	public void printSleepTimes() {
+		StringBuilder dutyChart = new StringBuilder();
+		dutyChart.append(String.format("Duty Chart for Guard #%d\n", getGuardId()));
+		dutyChart.append("===\n");
+
+		for (Entry<LocalDate, BitSet> dutyDates : sleepTimes.entrySet()) {
+			// print the date
+			dutyChart.append(dutyDates.getKey());
+			dutyChart.append(":\t");
+
+			BitSet timeAsleep = dutyDates.getValue();
+
+			for (int i = 0; i < INTERVAL_BITSET_LENGTH; i++) {
+				dutyChart.append(timeAsleep.get(i) ? '#' : '.');
+			}
+
+			dutyChart.append(" [");
+			dutyChart.append(timeAsleep.cardinality());
+			dutyChart.append("]\n");
+		}
+
+		System.out.println(dutyChart.toString());
+	}
+
+	public static BitSet createSleepTimeBitSet(LocalDateTime wentToSleep, LocalDateTime awoke) {
+		LocalDateTime start = getAdjustedStartTime(wentToSleep, awoke);
+		int startMinute = start.getMinute();
+		int endMinute = awoke.getMinute();
+
+		if (startMinute > endMinute)
+			throw new RuntimeException("Parsing error when handling time differential, can't continue.");
+
+		BitSet minutes = new BitSet(INTERVAL_BITSET_LENGTH);
+		for (; startMinute < endMinute; startMinute++) {
+			minutes.set(startMinute);
+		}
+
+		return minutes;
+	}
+
+	public static LocalDateTime getAdjustedStartTime(LocalDateTime start, LocalDateTime end) {
+		// the input data requires us to consider the midnight hours
+		// but can overlap into the previous day. to simplify the
+		// calculation, we'll need to round off the time to start at 12:00
+		return start.getDayOfMonth() < end.getDayOfMonth() ? end.with(LocalTime.MIN) : start;
+	}
+
+	public static GuardActivity getSleepyGuard(Collection<GuardActivity> guardRecords) {
+		GuardActivity max = null;
+		for (GuardActivity a : guardRecords) {
+			if (max == null) {
+				max = a;
+				continue;
+			}
+
+			if( a.getSumTimeAsleep() > max.getSumTimeAsleep())
+				max = a;
+		}
+		
+		return max;
 	}
 }
