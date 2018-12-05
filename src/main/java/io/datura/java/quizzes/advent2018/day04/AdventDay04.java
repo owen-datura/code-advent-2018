@@ -25,19 +25,19 @@ public class AdventDay04 {
 			String output = String.format("Determined that the guard with ID %d slept the most.", sleepyGuard);
 			System.out.println(output);
 			// determine the interval where the guard's most likely to be asleep
-			
+
 		} catch (IOException ioe) {
 			System.err.println("Encountered an error when handling input file, aborting.");
 			System.exit(1);
 		}
 	}
 
-	public static Map<Integer, Long> evalGuardSleepTimes(List<String> activities) {
+	public static Map<Integer, GuardActivity> evalGuardSleepTimes(List<String> activities) {
 		Integer guard = null;
 		GuardState guardState = GuardState.UNKNOWN;
 		LocalDateTime lastEvent = null;
 
-		Map<Integer, Long> sleepTimesByGuard = new HashMap<>();
+		Map<Integer, GuardActivity> sleepTimesByGuard = new HashMap<>();
 
 		for (String activity : activities) {
 			LocalDateTime tmpTime = SortIntelFile.parseInputDate(activity);
@@ -58,11 +58,13 @@ public class AdventDay04 {
 
 				// make a record of time spent asleep
 				if (sleepTimesByGuard.containsKey(guard)) {
-					Long timeSlept = sleepTimesByGuard.get(guard);
-					timeSlept += slept;
-					sleepTimesByGuard.put(guard, timeSlept);
+					GuardActivity ga = sleepTimesByGuard.get(guard);
+					ga.incrementTimesOnDuty();
+					ga.addToTimeAsleep(slept);
 				} else {
-					sleepTimesByGuard.put(guard, slept);
+					GuardActivity record = new GuardActivity(guard);
+					record.addToTimeAsleep(slept);
+					sleepTimesByGuard.put(guard, record);
 				}
 
 				// reset the clock
@@ -82,11 +84,20 @@ public class AdventDay04 {
 		return ChronoUnit.MINUTES.between(ts, ta);
 	}
 
-	public static Integer findSleepyGuard(Map<Integer, Long> activities) {
+	public static Integer findSleepyGuard(Map<Integer, GuardActivity> activities) {
 		if (activities == null || activities.isEmpty())
 			return Integer.valueOf(0);
 
-		return activities.entrySet().stream().max(Map.Entry.comparingByValue()).get().getKey();
+		GuardActivity max = null;
+		for (GuardActivity a : activities.values()) {
+			if (max == null)
+				max = a;
+
+			if (a.getTimeAsleep() > max.getTimeAsleep())
+				max = a;
+		}
+
+		return max.getGuardId();
 	}
 
 	public static Integer getCurrentGuardFromActivity(String activity) {

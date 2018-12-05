@@ -15,6 +15,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
 import io.datura.java.quizzes.advent2018.day04.AdventDay04;
+import io.datura.java.quizzes.advent2018.day04.GuardActivity;
 import io.datura.java.quizzes.advent2018.day04.GuardIntelDateComparator;
 import io.datura.java.quizzes.advent2018.day04.SortIntelFile;
 
@@ -79,28 +80,28 @@ public class AdventDay04Test {
 				"[1518-03-28 00:33] wakes up", "[1518-03-28 00:53] falls asleep" };
 
 		List<String> events = Arrays.asList(activities);
-		Map<Integer, Long> sleepTimes = AdventDay04.evalGuardSleepTimes(events);
+		Map<Integer, GuardActivity> sleepTimes = AdventDay04.evalGuardSleepTimes(events);
 
 		// should consist of two guards
 		assertEquals(2, sleepTimes.keySet().size());
 		// guard 2251
 		assertTrue(sleepTimes.containsKey(Integer.valueOf(2251)));
 		// guard 2251 slept for 46 minutes
-		assertEquals(Long.valueOf(46l), sleepTimes.get(2251));
+		assertEquals(46l, sleepTimes.get(2251).getTimeAsleep());
 		// guard 3319
 		assertTrue(sleepTimes.containsKey(Integer.valueOf(3319)));
 		// guard 3319 slept for 17 minutes
-		assertEquals(Long.valueOf(17l), sleepTimes.get(3319));
+		assertEquals(17l, sleepTimes.get(3319).getTimeAsleep());
 	}
 
 	@Test
 	public void testSleepyGuard() {
-		Map<Integer, Long> events = new HashMap<Integer, Long>();
-		events.put(123, 10l);
-		events.put(456, 5l);
-		events.put(789, 50l);
-		events.put(111, 45l);
-
+		Map<Integer, GuardActivity> events = new HashMap<>();
+		events.put(123, new GuardActivity(123, 10l));
+		events.put(456, new GuardActivity(456, 5l));
+		events.put(789, new GuardActivity(789, 50l));
+		events.put(111, new GuardActivity(111, 45l));
+		
 		Integer guardId = AdventDay04.findSleepyGuard(events);
 		assertEquals(Integer.valueOf(789), guardId);
 	}
