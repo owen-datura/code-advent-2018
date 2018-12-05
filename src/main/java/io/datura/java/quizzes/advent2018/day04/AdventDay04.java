@@ -20,7 +20,12 @@ public class AdventDay04 {
 	public static void main(String[] args) {
 		try {
 			List<String> activities = loadIntelFile();
-			evalGuardSleepTimes(activities);
+			// determine which guard sleeps the most
+			Integer sleepyGuard = findSleepyGuard(evalGuardSleepTimes(activities));
+			String output = String.format("Determined that the guard with ID %d slept the most.", sleepyGuard);
+			System.out.println(output);
+			// determine the interval where the guard's most likely to be asleep
+			
 		} catch (IOException ioe) {
 			System.err.println("Encountered an error when handling input file, aborting.");
 			System.exit(1);
@@ -69,12 +74,19 @@ public class AdventDay04 {
 				break;
 			}
 		}
-		
+
 		return Collections.unmodifiableMap(sleepTimesByGuard);
 	}
 
 	public static Long getTimeAsleep(LocalDateTime ts, LocalDateTime ta) {
 		return ChronoUnit.MINUTES.between(ts, ta);
+	}
+
+	public static Integer findSleepyGuard(Map<Integer, Long> activities) {
+		if (activities == null || activities.isEmpty())
+			return Integer.valueOf(0);
+
+		return activities.entrySet().stream().max(Map.Entry.comparingByValue()).get().getKey();
 	}
 
 	public static Integer getCurrentGuardFromActivity(String activity) {
