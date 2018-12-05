@@ -3,6 +3,7 @@ package io.datura.java.quizzes.advent2018.day04;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -14,7 +15,7 @@ public class GuardActivity {
 	private int timesOnDuty = 1;
 	private Map<LocalDate, BitSet> sleepTimes = new LinkedHashMap<>();
 
-	private static int INTERVAL_LENGTH = 60;
+	public static int INTERVAL_LENGTH = 60;
 
 	public GuardActivity(int guardId) {
 		this.guardId = guardId;
@@ -114,7 +115,7 @@ public class GuardActivity {
 		return max;
 	}
 
-	public static void createHistogram(int[] times) {
+	public static void createHistogram(Integer[] times) {
 		StringBuilder output = new StringBuilder();
 
 		for (int i = 0, sz = times.length; i < sz; i++) {
@@ -133,7 +134,7 @@ public class GuardActivity {
 		System.out.println(output);
 	}
 
-	public int[] createHistogramValues() {
+	public Integer[] createHistogramValues() {
 		int[] timeAsleep = new int[INTERVAL_LENGTH];
 		for (BitSet b : sleepTimes.values()) {
 			for (int i = 0; i < INTERVAL_LENGTH; i++) {
@@ -142,6 +143,6 @@ public class GuardActivity {
 			}
 		}
 
-		return timeAsleep;
+		return Arrays.stream(timeAsleep).boxed().toArray(Integer[]::new);
 	}
 }
