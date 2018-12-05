@@ -26,6 +26,7 @@ public class AdventDay04 {
 			System.out.println(output);
 			// determine the interval where the guard's most likely to be asleep
 			record.printSleepTimes();
+			GuardActivity.createHistogram(record.createHistogramValues());
 		} catch (IOException ioe) {
 			System.err.println("Encountered an error when handling input file, aborting.");
 			System.exit(1);

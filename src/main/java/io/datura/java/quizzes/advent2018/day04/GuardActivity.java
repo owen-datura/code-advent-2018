@@ -14,7 +14,7 @@ public class GuardActivity {
 	private int timesOnDuty = 1;
 	private Map<LocalDate, BitSet> sleepTimes = new LinkedHashMap<>();
 
-	private static int INTERVAL_BITSET_LENGTH = 60;
+	private static int INTERVAL_LENGTH = 60;
 
 	public GuardActivity(int guardId) {
 		this.guardId = guardId;
@@ -64,7 +64,7 @@ public class GuardActivity {
 
 			BitSet timeAsleep = dutyDates.getValue();
 
-			for (int i = 0; i < INTERVAL_BITSET_LENGTH; i++) {
+			for (int i = 0; i < INTERVAL_LENGTH; i++) {
 				dutyChart.append(timeAsleep.get(i) ? '#' : '.');
 			}
 
@@ -84,7 +84,7 @@ public class GuardActivity {
 		if (startMinute > endMinute)
 			throw new RuntimeException("Parsing error when handling time differential, can't continue.");
 
-		BitSet minutes = new BitSet(INTERVAL_BITSET_LENGTH);
+		BitSet minutes = new BitSet(INTERVAL_LENGTH);
 		for (; startMinute < endMinute; startMinute++) {
 			minutes.set(startMinute);
 		}
@@ -107,10 +107,41 @@ public class GuardActivity {
 				continue;
 			}
 
-			if( a.getSumTimeAsleep() > max.getSumTimeAsleep())
+			if (a.getSumTimeAsleep() > max.getSumTimeAsleep())
 				max = a;
 		}
-		
+
 		return max;
+	}
+
+	public static void createHistogram(int[] times) {
+		StringBuilder output = new StringBuilder();
+
+		for (int i = 0, sz = times.length; i < sz; i++) {
+			// print the index with leading zeros as appropriate
+			output.append(String.format("%02d", i));
+			output.append(" [");
+			output.append(String.format("%03d", times[i]));
+			output.append("]:\t");
+
+			for (int j = 0; j < times[i]; j++) {
+				output.append("#");
+			}
+			output.append("\n");
+		}
+
+		System.out.println(output);
+	}
+
+	public int[] createHistogramValues() {
+		int[] timeAsleep = new int[INTERVAL_LENGTH];
+		for (BitSet b : sleepTimes.values()) {
+			for (int i = 0; i < INTERVAL_LENGTH; i++) {
+				if (b.get(i))
+					timeAsleep[i]++;
+			}
+		}
+
+		return timeAsleep;
 	}
 }
