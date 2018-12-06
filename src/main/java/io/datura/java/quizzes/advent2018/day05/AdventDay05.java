@@ -1,5 +1,12 @@
 package io.datura.java.quizzes.advent2018.day05;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
@@ -10,10 +17,18 @@ public class AdventDay05 {
 	private static final Set<String> reactivePairs = createReactivePairs();
 
 	public static void main(String[] args) {
-		String polymer = "dabAcCaCBAcCcaDA";
-		int chainSize = processPolymerString(polymer);
-		String output = String.format("After processing, the polymer string contained %d values.", chainSize);
-		System.out.println(output);
+		try {
+			Deque<Character> polymer = loadInputFile();
+			int chainSize = processPolymerString(polymer);
+			// for viewing purposes the input file contains a newline,
+			// so we need to subtract one to account for that
+			chainSize--;
+			String output = String.format("After processing, the polymer string contained %d values.", chainSize);
+			System.out.println(output);
+		} catch (IOException ioe) {
+			System.err.println("Encountered an I/O error when processing file. Aborting.");
+			System.exit(1);
+		}
 	}
 
 	public static int processPolymerString(String input) {
@@ -22,7 +37,30 @@ public class AdventDay05 {
 		for (Character c : input.toCharArray()) {
 			in.push(c);
 		}
+		return processPolymerString(in);
+	}
 
+	private static Deque<Character> loadInputFile() throws IOException {
+		try {
+			ClassLoader cl = AdventDay05.class.getClassLoader();
+			Path inputFile = Paths.get(cl.getResource("polymer.txt").toURI());
+			// this exercise gives us a file with a gigantic single line
+			// that we'll end up needing to convert into individual characters
+			// anyway, so instead of reading all lines do it piecemeal
+			Deque<Character> out = new ArrayDeque<>();
+			try (BufferedReader reader = Files.newBufferedReader(inputFile, StandardCharsets.UTF_8)) {
+				int c;
+				while ((c = reader.read()) != -1) {
+					out.add((char) c);
+				}
+			}
+			return out;
+		} catch (URISyntaxException urie) {
+			throw new IOException("Encountered an I/O error when loading input file.");
+		}
+	}
+
+	public static int processPolymerString(Deque<Character> in) {
 		Deque<Character> out = new ArrayDeque<>();
 		for (Character c : in) {
 			if (out.isEmpty())
