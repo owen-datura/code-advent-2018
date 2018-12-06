@@ -1,45 +1,53 @@
 package io.datura.java.quizzes.advent2018.day05;
 
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CreateCharacterPairs {
-	private static final int DELTA = 32;
+public class AdventDay05 {
+	private static final Set<String> reactivePairs = createReactivePairs();
 
 	public static void main(String[] args) {
+		String polymer = "dabAcCaCBAcCcaDA";
+
+		// dump the input string into a stack
+		Deque<Character> in = new ArrayDeque<>();
+		for (Character c : polymer.toCharArray()) {
+			in.push(c);
+		}
+
+		Deque<Character> out = new ArrayDeque<>();
+		for (Character c : in) {
+			if (out.isEmpty())
+				out.push(c);
+			else {
+				Character prev = out.peek();
+
+				char[] p = new char[] { c, prev };
+				if (isReactivePair(p))
+					out.pop();
+				else
+					out.push(c);
+			}
+		}
+		
+		String output = String.format("After processing, the polymer string contained %d values.", out.size());
+		System.out.println(output);
+	}
+
+	private static boolean isReactivePair(char[] chars) {
+		return reactivePairs.contains(new String(chars));
+	}
+
+	public static Set<String> createReactivePairs() {
 		// the 'reactive' polymers are defined as being
 		// an ASCII character of the same letter
 		// but in the opposite case. there's plenty
 		// of tricks one can use for this, but the
 		// obvious (naive?) one involves just pre-computing
 		// the combinations
-		
-		// 97 = 'a', 122 = 'z'
-		StringBuilder combo = new StringBuilder();
-		for( int i = 97; i < 123; i++ ) {
-			char lc = (char)i;
-			char uc = (char)(i - DELTA);
-			
-			// Aa
-			combo.append("polymerPairs.add(\"");
-			combo.append(uc);
-			combo.append(lc);
-			combo.append("\");");
-			combo.append("\n");
-			
-			// aA
-			combo.append("polymerPairs.add(\"");
-			combo.append(lc);
-			combo.append(uc);
-			combo.append("\");");
-			combo.append("\n");
-		}
-		
-		System.out.println(combo.toString());
-		createSet();
-	}
-
-	private static void createSet() {
 		Set<String> polymerPairs = new HashSet<>(64);
 		polymerPairs.add("Aa");
 		polymerPairs.add("aA");
@@ -93,7 +101,6 @@ public class CreateCharacterPairs {
 		polymerPairs.add("yY");
 		polymerPairs.add("Zz");
 		polymerPairs.add("zZ");
-		
-		System.out.println(polymerPairs.size());
+		return Collections.unmodifiableSet(polymerPairs);
 	}
 }
