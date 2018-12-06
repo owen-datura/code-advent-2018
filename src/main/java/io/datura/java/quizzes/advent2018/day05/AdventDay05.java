@@ -11,10 +11,15 @@ public class AdventDay05 {
 
 	public static void main(String[] args) {
 		String polymer = "dabAcCaCBAcCcaDA";
+		int chainSize = processPolymerString(polymer);
+		String output = String.format("After processing, the polymer string contained %d values.", chainSize);
+		System.out.println(output);
+	}
 
+	public static int processPolymerString(String input) {
 		// dump the input string into a stack
 		Deque<Character> in = new ArrayDeque<>();
-		for (Character c : polymer.toCharArray()) {
+		for (Character c : input.toCharArray()) {
 			in.push(c);
 		}
 
@@ -32,9 +37,8 @@ public class AdventDay05 {
 					out.push(c);
 			}
 		}
-		
-		String output = String.format("After processing, the polymer string contained %d values.", out.size());
-		System.out.println(output);
+
+		return out.size();
 	}
 
 	private static boolean isReactivePair(char[] chars) {
