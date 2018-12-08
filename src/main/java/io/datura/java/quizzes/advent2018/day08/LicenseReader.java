@@ -5,14 +5,12 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class LicenseReader {
-	public static void main(String[] args) {
-		String exampleLicense = "2 3 0 3 10 11 12 1 1 0 1 99 2 1 1 2";
-		List<String> values = Arrays.asList(exampleLicense.split(" "));
-		ListIterator<String> vi = values.listIterator();
-
-		Node rootNode = createNode(vi);
+	public static Node createNodeFromLicenseString( String license ) {
+		List<String> values = Arrays.asList(license.split(" "));
+		ListIterator<String> valueIterator = values.listIterator();
+		return createNode(valueIterator);
 	}
-
+	
 	private static Node createNode(ListIterator<String> valueIterator) {
 		Node r = new Node();
 
