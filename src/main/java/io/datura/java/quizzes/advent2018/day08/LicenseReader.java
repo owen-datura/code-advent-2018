@@ -47,7 +47,7 @@ public class LicenseReader {
 		}
 
 		// with the children accounted for, add the current node's metadata values
-		sum += node.getMetaDataSum();
+		sum += node.getMetaData().sumMetaData();
 
 		return sum;
 	}

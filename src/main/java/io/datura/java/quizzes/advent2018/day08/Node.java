@@ -16,7 +16,7 @@ public class Node {
 	}
 
 	public boolean hasChildren() {
-		return this.children.size() > 0;
+		return children.size() > 0;
 	}
 
 	public NodeHeader getHeader() {
@@ -24,22 +24,22 @@ public class Node {
 	}
 
 	public void addMetaData(Integer value) {
-		this.metadata.addMetaData(value);
-	}
-
-	public int getMetaDataSum() {
-		return this.metadata.sumMetaData();
+		metadata.addMetaData(value);
 	}
 
 	public void addChild(Node child) {
-		this.children.add(child);
+		children.add(child);
 	}
 
 	public ListIterator<Node> childIterator() {
 		return children.listIterator();
 	}
 
-	class NodeHeader {
+	public NodeMetaData getMetaData() {
+		return metadata;
+	}
+
+	public class NodeHeader {
 		private int numChildren;
 		private int numMetadata;
 
@@ -60,7 +60,7 @@ public class Node {
 		}
 	}
 
-	class NodeMetaData {
+	public class NodeMetaData {
 		private List<Integer> metadata;
 
 		public NodeMetaData() {
