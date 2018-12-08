@@ -1,7 +1,6 @@
 package io.datura.java.quizzes.advent2018.day08;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -32,13 +31,13 @@ public class LicenseReader {
 
 		for (int i = 1; i <= meta; i++) {
 			Integer metaDataValue = Integer.parseInt(valueIterator.next());
-			r.getMetaData().addMetaData(metaDataValue);
+			r.addMetaData(metaDataValue);
 		}
 
 		return r;
 	}
 
-	private static int sumMetaData(Node node) {
+	public static int sumMetaData(Node node) {
 		int sum = 0;
 
 		// recursively find the sum of the children
@@ -48,8 +47,8 @@ public class LicenseReader {
 		}
 
 		// with the children accounted for, add the current node's metadata values
-		sum += node.getMetaData().sumMetaData();
-		
+		sum += node.getMetaDataSum();
+
 		return sum;
 	}
 }

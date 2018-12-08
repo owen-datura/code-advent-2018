@@ -23,8 +23,12 @@ public class Node {
 		return header;
 	}
 
-	public NodeMetaData getMetaData() {
-		return metadata;
+	public void addMetaData(Integer value) {
+		this.metadata.addMetaData(value);
+	}
+
+	public int getMetaDataSum() {
+		return this.metadata.sumMetaData();
 	}
 
 	public void addChild(Node child) {
