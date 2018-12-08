@@ -13,9 +13,14 @@ public class AdventDay08 {
 		try {
 			String nodeList = loadNodeFile();
 			Node n = LicenseReader.createNodeFromLicenseString(nodeList);
+			
 			int sum = LicenseReader.sumMetaData(n);
-			String output = String.format("Summed nodes, total was %d.", sum);
+			String output = String.format("Step #1: Summed nodes, total was %d.", sum);
 			System.out.println(output);
+			
+			int sum2 = LicenseReader.altSumMetaData(n);
+			String output2 = String.format("Step #2: Alternate summed nodes, total was %d.", sum2);
+			System.out.println(output2);
 		} catch (IOException e) {
 			System.exit(1);
 		}
