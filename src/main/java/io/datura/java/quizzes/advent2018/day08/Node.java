@@ -1,6 +1,7 @@
 package io.datura.java.quizzes.advent2018.day08;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -39,6 +40,32 @@ public class Node {
 		return metadata;
 	}
 
+	public List<Node> getMetaDataFilteredChildren() {
+		if (getMetaData() == null || !getMetaData().hasMetaDataEntries())
+			return Collections.emptyList();
+
+		List<Node> filteredChildren = new ArrayList<>();
+		for (Integer mv : getMetaData().metadata) {
+			if (mv <= 0)
+				continue;
+
+			// the metadata value uses 1 to refer to 'the first'
+			// metadata value, 2 to 'the second' etc. the array
+			// that contains the value is zero indexed, so adjust
+			// the value as appropriate
+			int idx = --mv;
+			try {
+				Node c = children.get(idx);
+				filteredChildren.add(c);
+			} catch (IndexOutOfBoundsException iobe) {
+				System.err.println("Index value of " + idx + " doesn't exist.");
+				continue;
+			}
+		}
+
+		return filteredChildren;
+	}
+
 	public class NodeHeader {
 		private int numChildren;
 		private int numMetadata;
@@ -73,6 +100,10 @@ public class Node {
 
 		public int sumMetaData() {
 			return metadata.stream().reduce(0, Integer::sum);
+		}
+
+		public boolean hasMetaDataEntries() {
+			return !metadata.isEmpty();
 		}
 	}
 }
