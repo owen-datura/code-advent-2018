@@ -2,6 +2,7 @@ package io.datura.java.quizzes.advent2018.day08;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class Node {
 	private NodeHeader header;
@@ -14,6 +15,10 @@ public class Node {
 		this.metadata = new NodeMetaData();
 	}
 
+	public boolean hasChildren() {
+		return this.children.size() > 0;
+	}
+
 	public NodeHeader getHeader() {
 		return header;
 	}
@@ -24,6 +29,10 @@ public class Node {
 
 	public void addChild(Node child) {
 		this.children.add(child);
+	}
+
+	public ListIterator<Node> childIterator() {
+		return children.listIterator();
 	}
 
 	class NodeHeader {
@@ -56,6 +65,10 @@ public class Node {
 
 		public void addMetaData(Integer value) {
 			metadata.add(value);
+		}
+
+		public int sumMetaData() {
+			return metadata.stream().reduce(0, Integer::sum);
 		}
 	}
 }

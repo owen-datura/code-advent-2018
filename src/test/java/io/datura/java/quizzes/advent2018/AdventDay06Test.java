@@ -24,10 +24,9 @@ public class AdventDay06Test {
 	}
 
 	@Test
-	public void createExamplePlot() {
+	public void checkMaxColumn() {
 		DestinationMatrix matrix = DestinationMatrix.create(getExampleDestinations());
 		int maxCol = matrix.getMaxColumn();
-		matrix.printMatrix();
 		assertEquals(8, maxCol);
 	}
 }
