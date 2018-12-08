@@ -10,6 +10,8 @@ public class Node {
 
 	public Node() {
 		this.header = new NodeHeader();
+		this.children = new ArrayList<>();
+		this.metadata = new NodeMetaData();
 	}
 
 	public NodeHeader getHeader() {

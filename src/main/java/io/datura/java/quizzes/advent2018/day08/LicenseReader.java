@@ -29,6 +29,11 @@ public class LicenseReader {
 			r.addChild(c);
 		}
 
+		for (int i = 1; i <= meta; i++) {
+			Integer metaDataValue = Integer.parseInt(valueIterator.next());
+			r.getMetaData().addMetaData(metaDataValue);
+		}
+
 		return r;
 	}
 }
