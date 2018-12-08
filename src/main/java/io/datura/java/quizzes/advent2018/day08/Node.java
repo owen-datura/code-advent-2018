@@ -58,6 +58,8 @@ public class Node {
 				Node c = children.get(idx);
 				filteredChildren.add(c);
 			} catch (IndexOutOfBoundsException iobe) {
+				// not actually an error, we'll just ignore cases where the
+				// requested metadata isn't present
 				System.err.println("Index value of " + idx + " doesn't exist.");
 				continue;
 			}
