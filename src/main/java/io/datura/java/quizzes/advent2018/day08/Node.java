@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class Node {
-	private NodeHeader header;
-	private List<Node> children;
-	private NodeMetaData metadata;
+	private final NodeHeader header;
+	private final List<Node> children;
+	private final NodeMetaData metadata;
 
 	public Node() {
 		this.header = new NodeHeader();
