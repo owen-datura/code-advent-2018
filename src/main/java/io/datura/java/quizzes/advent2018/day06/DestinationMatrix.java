@@ -61,7 +61,7 @@ public class DestinationMatrix {
 		
 		StringBuilder output = new StringBuilder();
 		for (Map<Integer, Destination> row : matrix) {
-			for( int i = 1; i < maxCol; i++ ) {
+			for( int i = 0; i < maxCol; i++ ) {
 				output.append(row.containsKey(i) ? row.get(i).getIdentifier() : ".");
 			}
 			output.append("\n");

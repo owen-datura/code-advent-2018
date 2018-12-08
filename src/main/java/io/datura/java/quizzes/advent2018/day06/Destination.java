@@ -1,16 +1,14 @@
 package io.datura.java.quizzes.advent2018.day06;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 public class Destination {
 	private final int x;
 	private final int y;
+	private final String identifier;
 
-	public Destination(int x, int y) {
+	public Destination(int x, int y, String identifier) {
 		this.x = x;
 		this.y = y;
+		this.identifier = identifier;
 	}
 
 	public int getX() {
@@ -21,10 +19,7 @@ public class Destination {
 		return y;
 	}
 
-	private static List<List<Destination>> mapDestinations(Collection<Destination> destinations) {
-		if (destinations == null || destinations.size() == 0)
-			return Collections.emptyList();
-
-		return Collections.emptyList();
+	public String getIdentifier() {
+		return identifier;
 	}
 }
