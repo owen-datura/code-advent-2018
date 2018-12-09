@@ -1,10 +1,11 @@
 package io.datura.java.quizzes.advent2018;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
@@ -21,14 +22,16 @@ public class AdventDay07Test {
 		assertEquals(Character.valueOf('B'), values.getRight());
 	}
 
+	@Test
 	public void testPageExample() {
 		Collection<Pair<Character, Character>> pairs = AdventDay07.toPairs(Arrays.asList(getDirectives()));
 		DiGraph graph = new DiGraph();
 		for (Pair<Character, Character> pair : pairs) {
 			graph.addVertexPair(pair.getLeft(), pair.getRight());
 		}
-		
-		assertTrue(true);
+		List<Character> resolve = graph.resolve();
+		String result = resolve.stream().map(c -> Character.toString(c)).collect(Collectors.joining(""));
+		assertEquals("CABDFE", result);
 	}
 
 	private static String[] getDirectives() {
