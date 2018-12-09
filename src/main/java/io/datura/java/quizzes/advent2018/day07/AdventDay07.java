@@ -1,7 +1,14 @@
 package io.datura.java.quizzes.advent2018.day07;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +22,17 @@ public class AdventDay07 {
 	private static final Pattern inputPattern = Pattern.compile(PATTERN);
 
 	public static void main(String[] args) {
-		DiGraph graph = new DiGraph();
+		try {
+			Collection<Pair<Character, Character>> pairs = toPairs(loadInputFile());
+			DiGraph graph = new DiGraph();
+			for (Pair<Character, Character> pair : pairs) {
+				graph.addVertexPair(pair.getLeft(), pair.getRight());
+			}
+			List<Character> resolved = graph.resolve();
+			System.out.println(resolved);
+		} catch (IOException ioe) {
+			System.exit(1);
+		}
 	}
 
 	public static Collection<Pair<Character, Character>> toPairs(Collection<String> lines) {
@@ -37,5 +54,15 @@ public class AdventDay07 {
 		char g1 = m.group(1).charAt(0);
 		char g2 = m.group(2).charAt(0);
 		return new ImmutablePair<Character, Character>(g1, g2);
+	}
+
+	private static Collection<String> loadInputFile() throws IOException {
+		try {
+			ClassLoader cl = AdventDay07.class.getClassLoader();
+			Path path = Paths.get(cl.getResource("dag-input.txt").toURI());
+			return Files.readAllLines(path, StandardCharsets.UTF_8);
+		} catch (URISyntaxException urie) {
+			throw new IOException("Error opening input file.");
+		}
 	}
 }
