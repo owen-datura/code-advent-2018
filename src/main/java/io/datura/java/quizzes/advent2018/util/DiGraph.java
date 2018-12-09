@@ -36,11 +36,30 @@ public class DiGraph {
 		}
 	}
 
-	public Vertex getZeroReferenceVertex() {
+	public Character getZeroReferenceVertex() {
 		List<Vertex> zrl = v.values().stream().filter(v -> !v.hasReferents())
 				.sorted(Comparator.comparing(Vertex::getIdentifier)).collect(Collectors.toList());
 
-		return (zrl != null && !zrl.isEmpty()) ? zrl.iterator().next() : null;
+		return (zrl != null && !zrl.isEmpty()) ? zrl.iterator().next().getIdentifier() : null;
+	}
+
+	public boolean popVertexByIdentifier(Character identifier) {
+		if (identifier == null)
+			return false;
+
+		Vertex vertex = v.get(identifier);
+		if (vertex == null)
+			return false;
+
+		// evaluate the neighbors in the adjacency listing,
+		// deducting one from the referent
+		adj.get(vertex).stream().forEach(v -> v.removeReference());
+		// now remove the vertex ref from the adjacency map
+		adj.remove(vertex);
+		// finally, remove the reference from the vertex map
+		v.remove(vertex.getIdentifier());
+
+		return true;
 	}
 
 	public int getVertices() {
@@ -68,7 +87,7 @@ public class DiGraph {
 		}
 
 		public void removeReference() {
-			indegree++;
+			indegree--;
 		}
 
 		public boolean hasReferents() {

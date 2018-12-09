@@ -1,10 +1,9 @@
 package io.datura.java.quizzes.advent2018.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-
-import io.datura.java.quizzes.advent2018.util.DiGraph.Vertex;
 
 public class DiGraphTest {
 	@Test
@@ -26,16 +25,42 @@ public class DiGraphTest {
 	@Test
 	public void testZeroReferenceVertex() {
 		DiGraph graph = new DiGraph();
-		
+
 		graph.addVertexPair(Character.valueOf('D'), Character.valueOf('A'));
 		graph.addVertexPair(Character.valueOf('C'), Character.valueOf('A'));
 		graph.addVertexPair(Character.valueOf('C'), Character.valueOf('F'));
 		graph.addVertexPair(Character.valueOf('B'), Character.valueOf('C'));
-		
+
 		// in the above scenario there should be two vertices with zero indegree,
 		// B & D. D is created first, but the requirements stipulate that
 		// the 'first' (sort by alpha) value should be considered, so test this
-		Vertex zeroRef = graph.getZeroReferenceVertex();
-		assertEquals(Character.valueOf('B'), zeroRef.getIdentifier());
+		Character zeroRefIdentifier = graph.getZeroReferenceVertex();
+		assertEquals(Character.valueOf('B'), zeroRefIdentifier);
+	}
+
+	@Test
+	public void testPopVertex() {
+		DiGraph graph = new DiGraph();
+
+		graph.addVertexPair(Character.valueOf('C'), Character.valueOf('A'));
+		graph.addVertexPair(Character.valueOf('C'), Character.valueOf('F'));
+		graph.addVertexPair(Character.valueOf('D'), Character.valueOf('A'));
+
+		// A's indegree is 2, F's indegree is 1
+		assertEquals(2, graph.getIndegreeByIdentifier(Character.valueOf('A')));
+		assertEquals(1, graph.getIndegreeByIdentifier(Character.valueOf('F')));
+
+		// there's two zero-indegree vertices, 'C' and 'D', so let's verify 
+		// that's the case
+		Character zeroRefIdentifier = graph.getZeroReferenceVertex();
+		assertEquals(Character.valueOf('C'), zeroRefIdentifier);
+		
+		// now we'll pop C
+		boolean result = graph.popVertexByIdentifier(Character.valueOf('C'));
+		assertTrue(result);
+		
+		// the indegree of both A and F should now have been changed
+		assertEquals(1, graph.getIndegreeByIdentifier(Character.valueOf('A')));
+		assertEquals(0, graph.getIndegreeByIdentifier(Character.valueOf('F')));
 	}
 }
