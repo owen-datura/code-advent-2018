@@ -1,5 +1,7 @@
 package io.datura.java.quizzes.advent2018.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -34,6 +36,25 @@ public class DiGraph {
 			// and increment the indegree of the target
 			t.addReference();
 		}
+	}
+
+	public List<Character> resolve() {
+		if (v.isEmpty())
+			return Collections.emptyList();
+
+		Character cv = getZeroReferenceVertex();
+		if (cv == null)
+			throw new IllegalStateException(
+					"Resolution failure! There does not appear to be a suitable Vertex from which to start.");
+
+		List<Character> rv = new ArrayList<>();
+		while (cv != null) {
+			popVertexByIdentifier(cv);
+			rv.add(cv);
+			cv = getZeroReferenceVertex();
+		}
+
+		return rv;
 	}
 
 	public Character getZeroReferenceVertex() {

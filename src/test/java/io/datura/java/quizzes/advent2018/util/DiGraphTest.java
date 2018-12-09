@@ -3,6 +3,8 @@ package io.datura.java.quizzes.advent2018.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.Test;
 
 public class DiGraphTest {
@@ -62,5 +64,16 @@ public class DiGraphTest {
 		// the indegree of both A and F should now have been changed
 		assertEquals(1, graph.getIndegreeByIdentifier(Character.valueOf('A')));
 		assertEquals(0, graph.getIndegreeByIdentifier(Character.valueOf('F')));
+	}
+	
+	@Test
+	public void testSimpleGraph() {
+		DiGraph graph = new DiGraph();
+		graph.addVertexPair(Character.valueOf('D'), Character.valueOf('C'));
+		graph.addVertexPair(Character.valueOf('C'), Character.valueOf('A'));
+		List<Character> v = graph.resolve();
+		assertEquals(Character.valueOf('D'), v.get(0));
+		assertEquals(Character.valueOf('C'), v.get(1));
+		assertEquals(Character.valueOf('A'), v.get(2));
 	}
 }
