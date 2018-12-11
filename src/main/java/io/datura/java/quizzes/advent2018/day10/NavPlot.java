@@ -24,31 +24,30 @@ public class NavPlot {
 		points.add(p);
 	}
 
-	public NavPoint[][] createPlot() {
+	public char[][] createPlot() {
 		// establish the plot dimensions
 		Pair<Integer, Integer> dim = getPlotDim(points);
 		// construct the graph we'll use to plot the points
-		NavPoint[][] plot = new NavPoint[dim.getRight()][dim.getLeft()];
-
+		char[][] plot = new char[dim.getRight()][dim.getLeft()];
+		
 		int dimX = dim.getLeft();
 		int dimY = dim.getRight();
-
-		// now evaluate the points we were given, placing them on the plot
-		for (NavPoint point : points) {
+		
+		for( NavPoint point : points ) {
 			int cx = point.getCorrectedPosX(dimX);
 			int cy = point.getCorrectedPosY(dimY);
-
-			plot[cy][cx] = point;
+			
+			plot[cy][cx] = '#';
 		}
-
+		
 		return plot;
 	}
-
-	public static void printPlot(NavPoint[][] plot, Writer out) throws IOException {
+	
+	public static void printPlot(char[][] plot, Writer out) throws IOException {
 		for (int i = 0; i < plot.length; i++) {
 			for (int j = 0; j < plot[i].length; j++) {
-				if (plot[i][j] != null)
-					out.write("#");
+				if (plot[i][j] != 0)
+					out.write(plot[i][j]);
 				else
 					out.write(".");
 			}

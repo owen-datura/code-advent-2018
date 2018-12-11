@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class AdventDay10 {
-	private static int ITERATIONS = 2_000;
+	private static int ITERATIONS = 10;
 
 	public static void main(String[] args) {
 		try {
@@ -36,8 +36,9 @@ public class AdventDay10 {
 					writer.write("\n");
 
 					// get and print the current state of the points
-					NavPoint[][] signalState = plot.createPlot();
+					char[][] signalState = plot.createPlot();
 					NavPlot.printPlot(signalState, writer);
+					signalState = null;
 					
 					// advance the state by one tick
 					plot.tick();
