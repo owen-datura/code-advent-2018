@@ -4,17 +4,25 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class NavPlot {
 	private Collection<NavPoint> points = new ArrayList<>();
-
+	private Map<Integer, Set<Integer>> plotByRow = new HashMap<>();
 	private static final Pair<Integer, Integer> ORIGIN = new ImmutablePair<Integer, Integer>(0, 0);
 
 	public void tick() {
+		// iterate all plot points, using their velocity values to
+		// alter their location in space
 		points.stream().forEach(NavPoint::tick);
+		// updating the locations has invalidated the plot, so clear it
+		plotByRow.clear();
 	}
 
 	public void addPlotPoint(NavPoint p) {
@@ -24,38 +32,55 @@ public class NavPlot {
 		points.add(p);
 	}
 
-	public char[][] createPlot() {
+	public void configurePlot() {
 		// establish the plot dimensions
 		Pair<Integer, Integer> dim = getPlotDim(points);
-		// construct the graph we'll use to plot the points
-		char[][] plot = new char[dim.getRight()][dim.getLeft()];
-		
+
 		int dimX = dim.getLeft();
 		int dimY = dim.getRight();
-		
-		for( NavPoint point : points ) {
-			int cx = point.getCorrectedPosX(dimX);
-			int cy = point.getCorrectedPosY(dimY);
-			
-			plot[cy][cx] = '#';
-		}
-		
-		return plot;
-	}
-	
-	public static void printPlot(char[][] plot, Writer out) throws IOException {
-		for (int i = 0; i < plot.length; i++) {
-			for (int j = 0; j < plot[i].length; j++) {
-				if (plot[i][j] != 0)
-					out.write(plot[i][j]);
-				else
-					out.write(".");
+
+		for (NavPoint point : points) {
+			int rowIdx = point.getCorrectedPosY(dimY);
+			if (plotByRow.containsKey(rowIdx)) {
+				plotByRow.get(rowIdx).add(point.getCorrectedPosX(dimX));
+			} else {
+				Set<Integer> rowValues = new TreeSet<>();
+				rowValues.add(point.getCorrectedPosX(dimX));
+				plotByRow.put(rowIdx, rowValues);
 			}
-			out.write("\n");
 		}
-		
+	}
+
+	public void printPlot(Writer out) throws IOException {
+		Pair<Integer, Integer> dim = getPlotDim(points);
+
+		int dimY = dim.getRight();
+		int dimX = dim.getLeft();
+
+		for (int y = 0; y < dimY; y++) {
+			if (plotByRow.containsKey(y)) {
+				generateRowOutput(out, plotByRow.get(y), dimX);
+			} else {
+				generateEmptyRow(out, dimX);
+			}
+		}
+	}
+
+	private static void generateEmptyRow(Writer out, int numCols) throws IOException {
+		for (int c = 0; c < numCols; c++) {
+			out.write(".");
+		}
 		out.write("\n");
-		out.flush();
+	}
+
+	private static void generateRowOutput(Writer out, Set<Integer> setCols, int numCols) throws IOException {
+		for (int c = 0; c < numCols; c++) {
+			if (setCols.contains(c))
+				out.write("#");
+			else
+				out.write(".");
+		}
+		out.write("\n");
 	}
 
 	public static Pair<Integer, Integer> getPlotDim(Collection<NavPoint> points) {

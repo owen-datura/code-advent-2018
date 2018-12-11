@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class AdventDay10 {
-	private static int ITERATIONS = 10;
+	private static int ITERATIONS = 15;
 
 	public static void main(String[] args) {
 		try {
-			Collection<NavPoint> points = parseInputFile("signals.txt");
+			Collection<NavPoint> points = parseInputFile("signal-small.txt");
 			NavPlot plot = new NavPlot();
 
 			System.out.println("Adding points...");
@@ -36,16 +36,15 @@ public class AdventDay10 {
 					writer.write("\n");
 
 					// get and print the current state of the points
-					char[][] signalState = plot.createPlot();
-					NavPlot.printPlot(signalState, writer);
-					signalState = null;
+					plot.configurePlot();
+					plot.printPlot(writer);
 					
 					// advance the state by one tick
 					plot.tick();
 				}
 			}
 
-			Path cwd = Paths.get("./signal-output.txt");
+			Path cwd = Paths.get("signal-output.txt");
 			System.out.println(String.format("Creating output file %s.", cwd.toAbsolutePath().toString()));
 			Files.move(tmp, cwd);
 		} catch (IOException ioe) {
