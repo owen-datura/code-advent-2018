@@ -86,6 +86,12 @@ public class NavPoint {
 		return deltaY;
 	}
 
+	@Override
+	public String toString() {
+		return "NavPoint [origX=" + origX + ", origY=" + origY + ", deltaX=" + deltaX + ", deltaY=" + deltaY + ", posX="
+				+ posX + ", posY=" + posY + "]";
+	}
+
 	public static NavPoint parseNavPoint(String input) {
 		Matcher m = inputRegex.matcher(input);
 		if (!m.matches())

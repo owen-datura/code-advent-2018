@@ -1,5 +1,7 @@
 package io.datura.java.quizzes.advent2018.day10;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -42,20 +44,18 @@ public class NavPlot {
 		return plot;
 	}
 
-	public static void printPlot(NavPoint[][] plot) {
-		StringBuilder output = new StringBuilder();
-
+	public static void printPlot(NavPoint[][] plot, Writer out) throws IOException {
 		for (int i = 0; i < plot.length; i++) {
 			for (int j = 0; j < plot[i].length; j++) {
 				if (plot[i][j] != null)
-					output.append("[*]");
+					out.write("#");
 				else
-					output.append("[ ]");
+					out.write(".");
 			}
-			output.append("\n");
+			out.write("\n");
 		}
-
-		System.out.println(output.toString());
+		
+		out.write("\n");
 	}
 
 	public static Pair<Integer, Integer> getPlotDim(Collection<NavPoint> points) {
