@@ -56,6 +56,7 @@ public class NavPlot {
 		}
 		
 		out.write("\n");
+		out.flush();
 	}
 
 	public static Pair<Integer, Integer> getPlotDim(Collection<NavPoint> points) {
