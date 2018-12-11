@@ -1,5 +1,8 @@
 package io.datura.java.quizzes.advent2018.day10;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class NavPoint {
 	private final int origX;
 	private final int origY;
@@ -9,6 +12,9 @@ public class NavPoint {
 
 	private int posX;
 	private int posY;
+
+	public static final String INPUT_PATTERN = "position=<([-?\\s]\\d+),\\s+([-?\\s]\\d+)>\\s+velocity=<([-?\\s]\\d+),\\s([-?\\s]\\d+)>";
+	private static final Pattern inputRegex = Pattern.compile(INPUT_PATTERN);
 
 	public NavPoint(int x, int y, int deltaX, int deltaY) {
 		this.origX = x;
@@ -29,17 +35,16 @@ public class NavPoint {
 		posY += deltaY;
 	}
 
-	private static int processCorrection(int range, int val) {
-		int origin = range / 2;
-		return (origin + val) - 1;
-	}
-
 	public int getPosX() {
 		return posX;
 	}
 
 	public int getCorrectedPosX(int xRange) {
-		return processCorrection(xRange, posX);
+		int origin = xRange / 2;
+		if (posX == 0)
+			return origin;
+		else
+			return origin + posX;
 	}
 
 	public void setPosX(int posX) {
@@ -51,7 +56,14 @@ public class NavPoint {
 	}
 
 	public int getCorrectedPosY(int yRange) {
-		return processCorrection(yRange, posY);
+		int origin = yRange / 2;
+
+		if (posY == 0)
+			return origin;
+		else if (posY > 0)
+			return origin - posY;
+		else
+			return origin + Math.abs(posY);
 	}
 
 	public void setPosY(int posY) {
@@ -72,5 +84,29 @@ public class NavPoint {
 
 	public int getDeltaY() {
 		return deltaY;
+	}
+
+	public static NavPoint parseNavPoint(String input) {
+		Matcher m = inputRegex.matcher(input);
+		if (!m.matches())
+			return null;
+
+		// X
+		String xVal = m.group(1);
+		Integer x = Integer.parseInt(xVal.trim());
+
+		// Y
+		String yVal = m.group(2);
+		Integer y = Integer.parseInt(yVal.trim());
+
+		// dX
+		String dXVal = m.group(3);
+		Integer dx = Integer.parseInt(dXVal.trim());
+
+		// dY
+		String dYVal = m.group(4);
+		Integer dy = Integer.parseInt(dYVal.trim());
+
+		return new NavPoint(x, y, dx, dy);
 	}
 }
