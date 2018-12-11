@@ -29,8 +29,17 @@ public class NavPoint {
 		posY += deltaY;
 	}
 
+	private static int processCorrection(int range, int val) {
+		int origin = range / 2;
+		return origin + val;
+	}
+
 	public int getPosX() {
 		return posX;
+	}
+
+	public int getCorrectedPosX(int xRange) {
+		return processCorrection(xRange, posX);
 	}
 
 	public void setPosX(int posX) {
@@ -39,6 +48,10 @@ public class NavPoint {
 
 	public int getPosY() {
 		return posY;
+	}
+
+	public int getCorrectedPosY(int yRange) {
+		return processCorrection(yRange, posY);
 	}
 
 	public void setPosY(int posY) {
