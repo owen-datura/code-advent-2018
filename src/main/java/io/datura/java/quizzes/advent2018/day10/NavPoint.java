@@ -31,7 +31,7 @@ public class NavPoint {
 
 	private static int processCorrection(int range, int val) {
 		int origin = range / 2;
-		return origin + val;
+		return (origin + val) - 1;
 	}
 
 	public int getPosX() {

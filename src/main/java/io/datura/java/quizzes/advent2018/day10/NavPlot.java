@@ -6,31 +6,66 @@ import java.util.Collection;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class PlotTest {
+public class NavPlot {
+	private Collection<NavPoint> points = new ArrayList<>();
+
 	private static final Pair<Integer, Integer> ORIGIN = new ImmutablePair<Integer, Integer>(0, 0);
 
 	public static void main(String[] args) {
-		Collection<NavPoint> points = new ArrayList<>();
-		
-		NavPoint p = new NavPoint(6,0,0,0);
-		points.add(p);
-		
-		NavPoint p2 = new NavPoint(-6, 0, 0, 0);
-		points.add(p2);
-		
-		NavPoint p3 = new NavPoint(0, 0, 0, 0);
-		points.add(p3);
-		
-		Pair<Integer, Integer> dimensions = getPlotDim(points);
-		int dimX = dimensions.getLeft();
+		NavPlot plot = new NavPlot();
 
-		int ex = p.getCorrectedPosX(dimX);
-		String output = String.format("Plot's X dimension extends %d units. The plotted point %d is at index %d.", dimX, p.getPosX(), ex);
-		System.out.println(output);
-		
-		ex = p2.getCorrectedPosX(dimX);
-		output = String.format("Plot's X dimension extends %d units. The plotted point %d is at index %d.", dimX, p2.getPosX(), ex);
-		System.out.println(output);
+		NavPoint p = new NavPoint(6, 0, 0, 0);
+		plot.addPlotPoint(p);
+		NavPoint p2 = new NavPoint(-6, 0, 0, 0);
+		plot.addPlotPoint(p2);
+		NavPoint p3 = new NavPoint(0, 0, 0, 0);
+		plot.addPlotPoint(p3);
+
+		NavPoint[][] matrix = plot.createPlot();
+		NavPlot.printPlot(matrix);
+	}
+
+	public void addPlotPoint(NavPoint p) {
+		if (p == null)
+			return;
+
+		points.add(p);
+	}
+
+	public NavPoint[][] createPlot() {
+		// establish the plot dimensions
+		Pair<Integer, Integer> dim = getPlotDim(points);
+		// construct the graph we'll use to plot the points
+		NavPoint[][] plot = new NavPoint[dim.getRight()][dim.getLeft()];
+
+		int dimX = dim.getLeft();
+		int dimY = dim.getRight();
+
+		// now evaluate the points we were given, placing them on the plot
+		for (NavPoint point : points) {
+			int cx = point.getCorrectedPosX(dimX);
+			int cy = point.getCorrectedPosY(dimY);
+
+			plot[cy][cx] = point;
+		}
+
+		return plot;
+	}
+
+	public static void printPlot(NavPoint[][] plot) {
+		StringBuilder output = new StringBuilder();
+
+		for (int i = 0; i < plot.length; i++) {
+			for (int j = 0; j < plot[i].length; j++) {
+				if (plot[i][j] != null)
+					output.append("[*]");
+				else
+					output.append("[ ]");
+			}
+			output.append("\n");
+		}
+
+		System.out.println(output.toString());
 	}
 
 	public static Pair<Integer, Integer> getPlotDim(Collection<NavPoint> points) {
