@@ -13,7 +13,7 @@ public class NavPoint {
 	private int posX;
 	private int posY;
 
-	public static final String INPUT_PATTERN = "position=<([-?\\s]\\d+),\\s+([-?\\s]\\d+)>\\s+velocity=<([-?\\s]\\d+),\\s([-?\\s]\\d+)>";
+	public static final String INPUT_PATTERN = "position=<\\s*(-?\\d*),\\s*(-?\\d*)> velocity=<\\s*(-?\\d*),\\s*(-?\\d*)>";
 	private static final Pattern inputRegex = Pattern.compile(INPUT_PATTERN);
 
 	public NavPoint(int x, int y, int deltaX, int deltaY) {
@@ -33,6 +33,10 @@ public class NavPoint {
 		// advance the current state of the coordinates by one iteration
 		posX += deltaX;
 		posY += deltaY;
+	}
+
+	public String getCoordinates() {
+		return String.format("(%d, %d)", posX, posY);
 	}
 
 	public int getPosX() {
