@@ -13,44 +13,60 @@ import java.util.Collection;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonWriter;
 
 public class AdventDay10 {
-	private static int ITERATIONS = 3;
+	private static int ITERATIONS = 30_000;
 
 	public static void main(String[] args) {
 		try {
-			Collection<NavPoint> points = parseInputFile("signal-small.txt");
+			String fileName = "signals.txt";
+			String outputFileName = createOutputFileName(fileName);
+			Collection<NavPoint> points = parseInputFile(fileName);
 			NavPlot plot = new NavPlot();
 
 			for (NavPoint point : points) {
 				plot.addPlotPoint(point);
 			}
 
-			Gson generator = getJsonConverter();
-			for (int i = 0; i < ITERATIONS; i++) {
-				Path tmp = Files.createTempFile("signal-out_" + i, ".json");
-				try (BufferedWriter writer = Files.newBufferedWriter(tmp, StandardCharsets.UTF_8)) {
-					writer.write(generator.toJson(plot));
+			System.out.println("Starting iterations...");
+
+			Path tmp = Files.createTempFile("signal-out_", ".json");
+			try (BufferedWriter writer = Files.newBufferedWriter(tmp, StandardCharsets.UTF_8);
+					JsonWriter jsonWriter = new JsonWriter(writer);) {
+				Gson gson = getJsonConverter();
+				jsonWriter.beginArray();
+				for (int i = 0; i < ITERATIONS; i++) {
+					gson.toJson(plot, NavPlot.class, jsonWriter);
+					plot.tick();
+
+					if (i % 100 == 0)
+						System.out.println(String.format("Iterated %d.", i));
 				}
-				Path cwd = Path.of(getFilenameByIteration(i));
-				Files.copy(tmp, cwd);
-				
-				plot.tick();
+				jsonWriter.endArray();
+
+				System.out.print("Iteration complete.");
 			}
+
+			Path output = Paths.get(outputFileName);
+			Files.move(tmp, output);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			System.exit(1);
 		}
 	}
 
-	private static String getFilenameByIteration(int i) {
-		return String.format("signal-out_%d.json", i);
+	public static String createOutputFileName(String inputName) {
+		StringBuilder outputName = new StringBuilder();
+		outputName.append(inputName.substring(0, inputName.lastIndexOf(".")));
+		outputName.append("_output");
+		outputName.append(".json");
+		return outputName.toString();
 	}
 
 	private static Gson getJsonConverter() {
 		GsonBuilder builder = new GsonBuilder();
 		builder.registerTypeAdapter(NavPlot.class, new NavPlotTypeAdapter());
-		builder.setPrettyPrinting();
 		return builder.create();
 	}
 

@@ -4,9 +4,18 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import io.datura.java.quizzes.advent2018.day10.AdventDay10;
 import io.datura.java.quizzes.advent2018.day10.NavPoint;
 
 public class AdventDay10Test {
+
+	@Test
+	public void generateOutputFileName() {
+		String inputName = "sample-input.txt";
+		String outputName = AdventDay10.createOutputFileName(inputName);
+		String expected = "sample-input_output.json";
+		assertEquals(expected, outputName);
+	}
 
 	@Test
 	public void initNavPoint() {
@@ -90,7 +99,7 @@ public class AdventDay10Test {
 			assertEquals(1, np.getDeltaX());
 			assertEquals(2, np.getDeltaY());
 		}
-		
+
 		// Test 3
 		{
 			String input = examples[2];
@@ -102,7 +111,7 @@ public class AdventDay10Test {
 			assertEquals(2, np.getDeltaX());
 			assertEquals(-5, np.getDeltaY());
 		}
-		
+
 		// Test 4
 		{
 			String input = examples[3];
