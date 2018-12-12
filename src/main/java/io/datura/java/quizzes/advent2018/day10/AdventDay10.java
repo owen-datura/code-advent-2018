@@ -11,46 +11,47 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class AdventDay10 {
-	private static int ITERATIONS = 15;
+	private static int ITERATIONS = 3;
 
 	public static void main(String[] args) {
 		try {
 			Collection<NavPoint> points = parseInputFile("signal-small.txt");
 			NavPlot plot = new NavPlot();
 
-			System.out.println("Adding points...");
-
-			// load the points
 			for (NavPoint point : points) {
 				plot.addPlotPoint(point);
 			}
 
-			Path tmp = Files.createTempFile("signal-", ".txt");
-			try (BufferedWriter writer = Files.newBufferedWriter(tmp, StandardCharsets.UTF_8)) {
-				System.out.println("Iterating points...");
-
-				for (int i = 0; i < ITERATIONS; i++) {
-					String output = String.format("Iteration #%02d", i);
-					writer.write(output);
-					writer.write("\n");
-
-					// get and print the current state of the points
-					plot.configurePlot();
-					plot.printPlot(writer);
-					
-					// advance the state by one tick
-					plot.tick();
+			Gson generator = getJsonConverter();
+			for (int i = 0; i < ITERATIONS; i++) {
+				Path tmp = Files.createTempFile("signal-out_" + i, ".json");
+				try (BufferedWriter writer = Files.newBufferedWriter(tmp, StandardCharsets.UTF_8)) {
+					writer.write(generator.toJson(plot));
 				}
+				Path cwd = Path.of(getFilenameByIteration(i));
+				Files.copy(tmp, cwd);
+				
+				plot.tick();
 			}
-
-			Path cwd = Paths.get("signal-output.txt");
-			System.out.println(String.format("Creating output file %s.", cwd.toAbsolutePath().toString()));
-			Files.move(tmp, cwd);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			System.exit(1);
 		}
+	}
+
+	private static String getFilenameByIteration(int i) {
+		return String.format("signal-out_%d.json", i);
+	}
+
+	private static Gson getJsonConverter() {
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(NavPlot.class, new NavPlotTypeAdapter());
+		builder.setPrettyPrinting();
+		return builder.create();
 	}
 
 	private static Collection<NavPoint> parseInputFile(String fileName) throws IOException {
