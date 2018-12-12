@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <title>Document</title>
+  <title>AoC 2018 :: Plotting Harness</title>
 </head>
 <body>
   <div>
@@ -18,7 +18,9 @@
   <script>
     let pointData = [];
     let curData = [];
-    let curIteration = 0;
+    // through trial and error i discovered the point
+    // at which the values were visible
+    let curIteration = 10727;
     let iHandle;
 
     fetch('signals_output.json')
@@ -34,7 +36,7 @@
 
     var advButton = document.getElementById('advance');
     advButton.addEventListener("click", e => {
-      iHandle = setInterval(iterateValues, 600);
+      iHandle = setInterval(iterateValues, 1000);
     });
 
     var stopButton = document.getElementById('stopIter');

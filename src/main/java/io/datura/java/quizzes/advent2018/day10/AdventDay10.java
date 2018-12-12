@@ -16,7 +16,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
 
 public class AdventDay10 {
-	private static int ITERATIONS = 30_000;
+	private static int ITERATIONS = 20_000;
 
 	public static void main(String[] args) {
 		try {
