@@ -5,6 +5,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -30,6 +31,18 @@ public class NavPlot {
 			return;
 
 		points.add(p);
+	}
+
+	public Pair<List<Integer>, List<Integer>> getPlotPoints() {
+		int sz = points.size();
+		List<Integer> xs = new ArrayList<>(sz);
+		List<Integer> ys = new ArrayList<>(sz);
+
+		for (NavPoint point : points) {
+			xs.add(point.getPosX());
+			ys.add(point.getPosY());
+		}
+		return new ImmutablePair<List<Integer>, List<Integer>>(xs, ys);
 	}
 
 	public void configurePlot() {
