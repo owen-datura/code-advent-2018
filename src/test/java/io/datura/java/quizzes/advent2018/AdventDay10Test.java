@@ -8,7 +8,16 @@ import io.datura.java.quizzes.advent2018.day10.AdventDay10;
 import io.datura.java.quizzes.advent2018.day10.NavPoint;
 
 public class AdventDay10Test {
-
+	@Test
+	public void tryMultipleIterations() {
+		NavPoint p = new NavPoint(3, 9, 1, -2);
+		p.tick();
+		p.tick();
+		p.tick();
+		assertEquals(6, p.getPosX());
+		assertEquals(3, p.getPosY());
+	}
+	
 	@Test
 	public void generateOutputFileName() {
 		String inputName = "sample-input.txt";
@@ -51,24 +60,6 @@ public class AdventDay10Test {
 		// x is unchanged
 		assertEquals(9, p.getPosX());
 		// y + 2 = 3
-		assertEquals(3, p.getPosY());
-	}
-
-	@Test
-	public void testPageExample() {
-		int x = 3;
-		int y = 9;
-		int dx = 1;
-		int dy = -2;
-
-		NavPoint p = new NavPoint(x, y, dx, dy);
-
-		// three seconds
-		p.tick();
-		p.tick();
-		p.tick();
-
-		assertEquals(6, p.getPosX());
 		assertEquals(3, p.getPosY());
 	}
 

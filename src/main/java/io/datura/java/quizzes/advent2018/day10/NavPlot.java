@@ -45,6 +45,19 @@ public class NavPlot {
 		return new ImmutablePair<List<Integer>, List<Integer>>(xs, ys);
 	}
 
+	public void printCoordinates() {
+		StringBuilder output = new StringBuilder();
+		for (NavPoint point : points) {
+			if( output.length() > 0 ) {
+				output.append(",");
+				output.append("\n");
+			}
+				
+			output.append(point.getCoordinates());
+		}
+		System.out.println(output.toString());
+	}
+
 	public void configurePlot() {
 		// establish the plot dimensions
 		Pair<Integer, Integer> dim = getPlotDim(points);
