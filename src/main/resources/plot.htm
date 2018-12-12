@@ -8,30 +8,58 @@
   <title>Document</title>
 </head>
 <body>
+  <div>
+    <h3 id="curIteration">Now Serving #0</h3>
+  </div>
   <div id="myPlot"></div>
-  <button id="advance">Advance</button>
+  <button id="advance">Start Iteration</button>
+  <button id="stopIter">Stop Iteration</button>
+
   <script>
     let pointData = [];
     let curData = [];
     let curIteration = 0;
-    fetch('signal-small_output.json')
+    let iHandle;
+
+    fetch('signals_output.json')
       .then(response => response.json())
       .then(json => pointData = json)
       .then(() => {
         const plotDiv = document.getElementById('myPlot');
         curData.push(pointData[curIteration]);
         Plotly.newPlot(plotDiv, curData);
+
+        updateIteration(curIteration);
       });
 
     var advButton = document.getElementById('advance');
     advButton.addEventListener("click", e => {
+      iHandle = setInterval(iterateValues, 600);
+    });
+
+    var stopButton = document.getElementById('stopIter');
+    stopButton.addEventListener("click", e => {
+      if( undefined !== iHandle ) {
+        clearInterval(iHandle);
+        iHandle = undefined;
+      }
+    });
+
+    function iterateValues() {
       let d = pointData[++curIteration];
       let da = [];
       da.push(d);
 
       const plotDiv = document.getElementById('myPlot');
       Plotly.react(plotDiv, da);
-    });
+      updateIteration(curIteration);
+    };
+
+    function updateIteration(num) {
+      const container = document.getElementById('curIteration');
+      const message = `Now Serving #${num}`;
+      container.innerHTML = message;
+    }
   </script>
 </body>
 </html>
