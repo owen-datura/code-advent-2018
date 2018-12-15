@@ -41,6 +41,8 @@ public class Game {
 		obj = new Elf();
 		world.setEntityAt(dest, obj);
 		
+		world.startRound();
+		
 		System.out.println(world.getTextualGameWorld());
 	}
 }

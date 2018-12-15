@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import io.datura.java.quizzes.advent2018.day15.npc.NonPlayerCharacter;
 import io.datura.java.quizzes.advent2018.day15.terrain.Floor;
 import io.datura.java.quizzes.advent2018.day15.terrain.Wall;
 
@@ -13,12 +14,31 @@ public class GameWorld {
 	private final int x;
 	private final int y;
 
+	private int currentRound = 1;
+
 	public GameWorld(int x, int y) {
 		this.x = x;
 		this.y = y;
 
 		world = new GameEntity[y][x];
 		initializeWorld();
+	}
+
+	public void startRound() {
+		setOrderOfAttack();
+		currentRound++;
+	}
+
+	private void setOrderOfAttack() {
+		int battleOrder = 1;
+		for (int row = 0; row < world.length; row++)
+			for (int col = 0; col < world[row].length; col++) {
+				GameEntity e = world[row][col];
+				if (e instanceof NonPlayerCharacter) {
+					((NonPlayerCharacter) e).setOrderOfAttack(battleOrder);
+					battleOrder++;
+				}
+			}
 	}
 
 	private void initializeWorld() {
@@ -65,7 +85,7 @@ public class GameWorld {
 		assert de.canBeOverwritten() : "Attempting to overwrite an object that doesn't allow it.";
 
 		// set the source entity to the destination
-		de = se;
+		world[dest.getRight()][dest.getLeft()] = se;
 
 		// if we have a replacement value set for the source, set it
 		// otherwise, replace it with a floor value
@@ -81,7 +101,12 @@ public class GameWorld {
 		StringBuilder output = new StringBuilder(sz);
 		for (int row = 0; row < world.length; row++) {
 			for (int col = 0; col < world[row].length; col++) {
-				output.append(world[row][col].getOutputSymbol());
+				GameEntity e = world[row][col];
+				if (e instanceof NonPlayerCharacter)
+					output.append(((NonPlayerCharacter) e).getOrderOfAttack());
+				else
+					output.append(e.getOutputSymbol());
+
 			}
 			output.append("\n");
 		}
