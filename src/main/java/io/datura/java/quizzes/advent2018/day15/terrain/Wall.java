@@ -10,4 +10,9 @@ public class Wall extends Terrain {
 	public char getOutputSymbol() {
 		return '#';
 	}
+
+	@Override
+	public boolean canBeMoved() {
+		return false;
+	}
 }
