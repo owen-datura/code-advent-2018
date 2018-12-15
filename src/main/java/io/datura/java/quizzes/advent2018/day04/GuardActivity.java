@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -74,6 +75,7 @@ public class GuardActivity {
 			dutyChart.append("]\n");
 		}
 
+		
 		System.out.println(dutyChart.toString());
 	}
 
